@@ -9,8 +9,8 @@ __pycache__/
 *$py.class
 
 # Base de datos local (descomenta la siguiente línea si NO quieres compartir datos de prueba)
-# *.db
-# *.sqlite3
+ *.db
+ *.sqlite3
 
 # Configuraciones locales de editores y sistemas operativos
 .vscode/
