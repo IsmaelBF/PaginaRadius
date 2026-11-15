@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ actividad.titulo }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4">
+    <div class="max-w-md mx-auto pt-4 space-y-6">
+        <a href="/" class="inline-flex items-center text-sm text-indigo-400 hover:underline">
+            ‹ Volver a la Agenda
+        </a>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+            <div class="flex justify-between items-start">
+                <span class="text-xs font-mono bg-slate-950 text-indigo-400 px-3 py-1 rounded-lg">
+                    {{ actividad.hora_inicio }} hrs
+                </span>
+                <span class="text-xs uppercase font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">
+                    {{ actividad.tipo }}
+                </span>
+            </div>
+
+            <h1 class="text-2xl font-bold text-white">{{ actividad.titulo }}</h1>
+
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+                <h2 class="text-xs uppercase tracking-wider text-slate-500 mb-1">Descripción / Qué hacer</h2>
+                <p class="text-sm text-slate-300 whitespace-pre-line">
+                    {{ actividad.descripcion if actividad.descripcion else 'Sin descripción adicional.' }}
+                </p>
+            </div>
+
+            <!-- Botón especial si la actividad es de tipo Gimnasio -->
+            {% if actividad.tipo == 'gimnasio' %}
+                <a href="/gimnasio"
+                   class="block w-full text-center bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3.5 rounded-xl transition">
+                    Ir al Registro de Gimnasio →
+                </a>
+            {% endif %}
+
+            <form action="/completar-actividad/{{ actividad.id }}" method="POST">
+                <button type="submit"
+                        class="w-full {{ 'bg-slate-800 text-slate-300' if actividad.completada else 'bg-indigo-600 text-white' }} font-semibold py-3 rounded-xl transition text-sm">
+                    {{ 'Marcar como pendiente' if actividad.completada else '✓ Marcar actividad como completada' }}
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

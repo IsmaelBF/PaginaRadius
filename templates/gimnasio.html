@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo Gimnasio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-24">
+    <div class="max-w-md mx-auto px-4 pt-6 space-y-6">
+        <header class="border-b border-slate-800 pb-4">
+            <h1 class="text-2xl font-bold text-emerald-400">Entrenamiento</h1>
+            <p class="text-xs text-slate-400">Registro de cargas y series</p>
+        </header>
+
+        <!-- Extra: Consulta de estado según sueño registrado -->
+        {% if readiness %}
+            <div class="p-4 rounded-2xl bg-slate-900 border border-{{ readiness.color }}-500/40">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs uppercase font-semibold text-slate-400">Estado según tu sueño</span>
+                    <span class="text-sm font-bold text-{{ readiness.color }}-400">{{ readiness.score }}% • {{ readiness.estado }}</span>
+                </div>
+                <p class="text-xs text-slate-300">{{ readiness.mensaje }}</p>
+            </div>
+        {% else %}
+            <a href="/sueno" class="block p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-sky-400 text-center">
+                No has registrado tu sueño hoy. Toca aquí para evaluar tu energía →
+            </a>
+        {% endif %}
+
+        <!-- Formulario de Series -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <form action="/registrar-serie" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Ejercicio</label>
+                    <select name="ejercicio_id" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-3 text-sm">
+                        {% for ej in ejercicios %}
+                            <option value="{{ ej.id }}">[{{ ej.musculo }}] {{ ej.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Peso (kg)</label>
+                        <input type="number" step="0.5" min="0" name="peso_kg" required placeholder="60"
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-3 text-lg font-bold text-center">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Reps</label>
+                        <input type="number" min="1" name="repeticiones" required placeholder="10"
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-3 text-lg font-bold text-center">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3.5 rounded-xl">
+                    + Guardar Serie
+                </button>
+            </form>
+        </section>
+
+        <!-- Series de hoy -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">Series de Hoy</h2>
+            {% if series_hoy %}
+                <ul class="divide-y divide-slate-800">
+                    {% for s in series_hoy %}
+                        <li class="py-2.5 flex justify-between items-center text-sm">
+                            <span>{{ s.ejercicio }} <span class="text-xs text-slate-500">(#{{ s.numero_serie }})</span></span>
+                            <span class="font-bold text-emerald-400">{{ s.peso_kg }} kg × {{ s.repeticiones }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-xs text-slate-500 text-center py-2">Sin series registradas hoy.</p>
+            {% endif %}
+        </section>
+    </div>
+
+    <nav class="fixed bottom-0 inset-x-0 bg-slate-900 border-t border-slate-800 flex justify-around py-3 max-w-md mx-auto">
+        <a href="/" class="text-slate-400 hover:text-indigo-400 font-medium text-xs flex flex-col items-center">Agenda</a>
+        <a href="/gimnasio" class="text-emerald-400 font-bold text-xs flex flex-col items-center">Gimnasio</a>
+        <a href="/sueno" class="text-slate-400 hover:text-sky-400 font-medium text-xs flex flex-col items-center">Sueño</a>
+    </nav>
+</body>
+</html>
