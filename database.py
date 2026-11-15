@@ -117,6 +117,22 @@ def init_db():
         UNIQUE(usuario_id, fecha) -- Evita registrar dos veces el sueño del mismo día
     );
     """)
+    # 9. Agenda Diaria (Núcleo principal de actividades vinculable a rutinas)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS actividades_agenda (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
+        fecha DATE NOT NULL,
+        hora_inicio TEXT NOT NULL, -- Formato 'HH:MM'
+        titulo TEXT NOT NULL,
+        descripcion TEXT,
+        tipo TEXT NOT NULL DEFAULT 'general', -- 'general', 'tarea', 'gimnasio'
+        rutina_id INTEGER, -- Opcional: vincula la actividad con una rutina si tipo == 'gimnasio'
+        completada BOOLEAN NOT NULL DEFAULT 0,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+        FOREIGN KEY (rutina_id) REFERENCES rutinas(id) ON DELETE SET NULL
+    );
+    """)
 
     conn.commit()
     seed_initial_data(conn)
